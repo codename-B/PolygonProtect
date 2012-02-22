@@ -71,6 +71,8 @@ public class PolygonEntity implements Listener {
 			}
 			}
 			if(cancelled)
+				Cancellable cancel ;
+				cancel = (Cancellable) event;
 				cancel.setCancelled(true);
 			PolygonDebug.log(event, (Cancellable) event);
 	}
