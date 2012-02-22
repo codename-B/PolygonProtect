@@ -1,11 +1,12 @@
 package net.betterverse.protect;
 
 import java.util.List;
-
+import net.betterverse.protect.utils.ProtectedPolygon;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -13,7 +14,6 @@ import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -23,36 +23,23 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.betterverse.protect.utils.ProtectedPolygon;
-
-public class PolygonBlock extends BlockListener {
+public class PolygonBlock implements Listener {
 	
 	public PolygonBlock(PluginManager pm, JavaPlugin plugin) {
-		pm.registerEvent(Event.Type.BLOCK_BREAK, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.BLOCK_BURN, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.BLOCK_DISPENSE, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.BLOCK_FADE, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.BLOCK_FORM, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.BLOCK_FROMTO, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.BLOCK_IGNITE, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.BLOCK_PLACE, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.BLOCK_SPREAD, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.LEAVES_DECAY, this, Priority.Normal, plugin);
+		pm.registerEvents(this, plugin);
 	}
 	
 	PolygonManager pm = PolygonManager.getInstance();
 	
 	public void eventCheck(Event event, List<ProtectedPolygon> poly) {
-		if(poly.size() == 0)
+		if(poly.isEmpty())
 			return;
-		Cancellable cancel = null;
+		Cancellable cancel ;
 		if(event instanceof Cancellable)
 			cancel = (Cancellable) event;
 		else
 			return;
-		String flag = event.getType().name();
+		String flag = event.getEventName();
 		boolean cancelled = false;
 		for(ProtectedPolygon p : poly) {
 			boolean fl = p.getFlag(flag);
@@ -65,7 +52,7 @@ public class PolygonBlock extends BlockListener {
 		PolygonDebug.log(event, (Cancellable) event);
 	}
 	
-	@Override
+	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		boolean build = true;
@@ -84,7 +71,7 @@ public class PolygonBlock extends BlockListener {
 		event.setCancelled(true);
 	}
 	
-	@Override
+	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
 		boolean build = true;
@@ -103,67 +90,67 @@ public class PolygonBlock extends BlockListener {
 		event.setCancelled(true);
 	}
 
-	@Override
+	@EventHandler
 	public void onBlockBurn(BlockBurnEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onBlockDispense(BlockDispenseEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onBlockFade(BlockFadeEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onBlockForm(BlockFormEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onBlockFromTo(BlockFromToEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onBlockIgnite(BlockIgniteEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onBlockPistonExtend(BlockPistonExtendEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onBlockPistonRetract(BlockPistonRetractEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onBlockSpread(BlockSpreadEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onLeavesDecay(LeavesDecayEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);

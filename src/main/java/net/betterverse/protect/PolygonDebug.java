@@ -10,7 +10,7 @@ public class PolygonDebug {
 	public static void log(Event event, Cancellable cancel) {
 		if(!log)
 			return;
-		System.out.println(event.getType().name()+"_CANCELLED:"+cancel.isCancelled());
+		System.out.println(event.getEventName()+"_CANCELLED:"+cancel.isCancelled());
 	}
 
 }

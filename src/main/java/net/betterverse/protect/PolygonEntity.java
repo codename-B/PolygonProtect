@@ -1,21 +1,20 @@
 package net.betterverse.protect;
 
 import java.util.List;
-
+import net.betterverse.protect.utils.ProtectedPolygon;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreeperPowerEvent;
-import org.bukkit.event.entity.EndermanPickupEvent;
-import org.bukkit.event.entity.EndermanPlaceEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
@@ -27,38 +26,23 @@ import org.bukkit.event.painting.PaintingPlaceEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.betterverse.protect.utils.ProtectedPolygon;
-
-public class PolygonEntity extends EntityListener {
+public class PolygonEntity implements Listener {
 	
 	PolygonManager pm = PolygonManager.getInstance();
 	
 	public PolygonEntity(PluginManager pm, JavaPlugin plugin) {
-		pm.registerEvent(Event.Type.CREATURE_SPAWN, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.CREEPER_POWER, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.ENDERMAN_PICKUP, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.ENDERMAN_PLACE, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.ENTITY_COMBUST, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.ENTITY_DAMAGE, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.ENTITY_EXPLODE, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.ENTITY_TARGET, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.EXPLOSION_PRIME, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.ITEM_SPAWN, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.PAINTING_BREAK, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.PAINTING_PLACE, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.PROJECTILE_HIT, this, Priority.Normal, plugin);
-		pm.registerEvent(Event.Type.SLIME_SPLIT, this, Priority.Normal, plugin);
+		pm.registerEvents(this,plugin);
 	}
 	
 	public void eventCheck(Event event, List<ProtectedPolygon> poly) {
-		if(poly.size() == 0)
+		if(poly.isEmpty())
 			return;
-		Cancellable cancel = null;
+		Cancellable cancel ;
 		if(event instanceof Cancellable)
 			cancel = (Cancellable) event;
 		else
 			return;
-		String flag = event.getType().name();
+		String flag = event.getEventName();
 		boolean cancelled = false;
 		for(ProtectedPolygon p : poly) {
 			boolean fl = p.getFlag(flag);
@@ -71,37 +55,31 @@ public class PolygonEntity extends EntityListener {
 		PolygonDebug.log(event, (Cancellable) event);
 	}
 
-	@Override
+	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onCreeperPower(CreeperPowerEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
-	public void onEndermanPickup(EndermanPickupEvent event) {
+	@EventHandler
+	public void onEndermanPickup(EntityChangeBlockEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getBlock().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
-	public void onEndermanPlace(EndermanPlaceEvent event) {
-				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
-				eventCheck(event, poly);
-	}
-
-	@Override
+	@EventHandler
 	public void onEntityCombust(EntityCombustEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onEntityDamage(EntityDamageEvent event) {
 				if(event.getEntity() instanceof Player) {
 				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
@@ -142,31 +120,31 @@ public class PolygonEntity extends EntityListener {
 				}
 	}
 
-	@Override
+	@EventHandler
 	public void onEntityExplode(EntityExplodeEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onEntityTarget(EntityTargetEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onExplosionPrime(ExplosionPrimeEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onItemSpawn(ItemSpawnEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onPaintingPlace(PaintingPlaceEvent event) {
 		Player player = event.getPlayer();
 		boolean build = true;
@@ -184,7 +162,7 @@ public class PolygonEntity extends EntityListener {
 		event.setCancelled(!build);	
 	}
 
-	@Override
+	@EventHandler
 	public void onPaintingBreak(PaintingBreakEvent ev) {
 		if(ev instanceof PaintingBreakByEntityEvent) {
 		PaintingBreakByEntityEvent event = (PaintingBreakByEntityEvent) ev;
@@ -208,13 +186,13 @@ public class PolygonEntity extends EntityListener {
 		}
 	}
 
-	@Override
+	@EventHandler
 	public void onProjectileHit(ProjectileHitEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
 				eventCheck(event, poly);
 	}
 
-	@Override
+	@EventHandler
 	public void onSlimeSplit(SlimeSplitEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
 				eventCheck(event, poly);
