@@ -58,7 +58,21 @@ public class PolygonEntity implements Listener {
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
-				eventCheck(event, poly);
+				//eventCheck(event, poly);
+				
+			if(poly.isEmpty())
+			return;
+			String flag = event.getEventName();
+			boolean cancelled = false;
+			for(ProtectedPolygon p : poly) {
+			boolean fl = p.getFlag(flag);
+			if(fl) {
+				cancelled = true;
+			}
+			}
+			if(cancelled)
+				cancel.setCancelled(true);
+			PolygonDebug.log(event, (Cancellable) event);
 	}
 
 	@EventHandler
