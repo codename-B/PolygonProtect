@@ -1,0 +1,9 @@
+name: PolygonProtect
+version: 1.0
+author: Betterverse
+main: net.betterverse.protect.PolygonProtect
+commands:
+    polygon:
+        usage: /<command> arg
+    pmeta:
+        usage: /<command>
