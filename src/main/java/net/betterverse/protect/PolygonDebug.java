@@ -5,7 +5,7 @@ import org.bukkit.event.Event;
 
 public class PolygonDebug {
 	
-	private static boolean log = false;
+	private static boolean log = true;
 	
 	public static void log(Event event, Cancellable cancel) {
 		if(!log)
