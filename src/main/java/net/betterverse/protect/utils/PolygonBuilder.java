@@ -46,7 +46,7 @@ public class PolygonBuilder {
 	
 	private List<String> getFlags() {
 		// TODO Auto-generated method stub
-		return new ArrayList<String>();
+		return new ArrayList();
 	}
 	
 	public void finalise(String name) {
