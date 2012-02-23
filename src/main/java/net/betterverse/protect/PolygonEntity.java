@@ -59,7 +59,7 @@ public class PolygonEntity implements Listener {
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 				List<ProtectedPolygon> poly = pm.getList(event.getEntity().getLocation());
 				//eventCheck(event, poly);
-				
+			/*	
 			if(poly.isEmpty())
 			{event.setCancelled(true);
 			return;}
@@ -71,7 +71,7 @@ public class PolygonEntity implements Listener {
 				cancelled = true;
 			}
 			}
-			if(cancelled)
+			if(cancelled)*/
 			
 				event.setCancelled(true);
 			PolygonDebug.log(event, (Cancellable) event);
