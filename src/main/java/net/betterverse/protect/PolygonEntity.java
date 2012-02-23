@@ -61,8 +61,8 @@ public class PolygonEntity implements Listener {
 				//eventCheck(event, poly);
 				
 			if(poly.isEmpty())
-			event.setCancelled(true);
-			return;
+			{event.setCancelled(true);
+			return;}
 			String flag = event.getEventName();
 			boolean cancelled = false;
 			for(ProtectedPolygon p : poly) {
